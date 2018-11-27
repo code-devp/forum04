@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "name": "Sohrab",
+    "team": "Team Jacob",
+    "skils": ["sass", "humility", "kotlin"]
+  },
+  {
+    "id": "2",
+    "name": "Bruce",
+    "team": "Team Edward",
+    "skils": ["anti-shark spray", "grapling hook", "wealth"]
+  },
+  {
+    "id": "3",
+    "name": "Clark",
+    "team": "A Team",
+    "skils": ["laser vision", "C#"]
+  },
+  {
+    "id": "4",
+    "name": "Barry",
+    "team": "Team America",
+    "skils": ["super speed"]
+  }
+]

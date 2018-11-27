@@ -1,0 +1,9 @@
+{
+  "check-coverage": true,
+  "per-file": true,
+  "exclude": [
+    "src/app.js",
+    "src/Server.js",
+    "test"
+  ]
+}

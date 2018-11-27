@@ -1,0 +1,53 @@
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-developers-v1
+  labels:
+    app: api-developers-v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-developers-v1
+  template:
+    metadata:
+      labels:
+        app: api-developers-v1
+    spec:
+      containers:
+        - name: api-developers-v1
+          image: gcr.io/dpedevs/api-developers-v1
+          env:
+            - name: HTTP_BASE_PATH
+              value: /team0
+          ports:
+            - containerPort: 8085
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8085
+            initialDelaySeconds: 5
+          resources:
+            requests:
+              memory: "50Mi"
+              cpu: "250m"
+            limits:
+              memory: "100Mi"
+              cpu: "500m"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-developers-v1
+spec:
+  type: LoadBalancer
+  selector:
+    app: api-developers-v1
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8085

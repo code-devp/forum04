@@ -1,0 +1,50 @@
+{
+  "name": "api-developers-v1",
+  "version": "1.0.0",
+  "description": "Developer API v1",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "nodemon src/app.js --exec babel-node",
+    "build": "babel src --out-dir dist --copy-files --source-maps",
+    "serve": "node dist/app.js",
+    "lint": "eslint src/* test/*",
+    "lint-fix": "eslint --fix src/* test/*",
+    "test": "mocha --exit --require @babel/register test/**/*.js",
+    "coverage-show": "nyc npm run test",
+    "coverage": "nyc check-coverage npm run test",
+    "check": "npm run lint && npm run test && npm run coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@hub.deloittedigital.com.au:7999/pedev/forum-03-cicd.git"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "author": "sohrab",
+  "license": "ISC",
+  "homepage": "https://hub.deloittedigital.com.au/stash/projects/PEDEV/repos/forum-04-cicd",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "moment-timezone": "^0.5.23",
+    "winston": "^3.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/register": "^7.0.0",
+    "babel-eslint": "^10.0.1",
+    "chai": "^4.2.0",
+    "eslint": "^5.9.0",
+    "eslint-config-prettier": "^3.3.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.6",
+    "nyc": "^13.1.0",
+    "prettier": "1.15.2",
+    "sinon": "^7.1.1"
+  }
+}

@@ -1,0 +1,59 @@
+pipelines:
+
+  pull-requests:
+    feature/*:
+      - step: 
+          name: Test application
+          image: node:10.13-alpine
+          script:
+            - npm install
+            # work-around for istanbul's missing report directory
+            - mkdir ./.nyc_output
+            - npm run check
+
+  branches:
+    master:
+      - step: 
+          name: Test application
+          image: node:10.13-alpine
+          script:
+            - npm install
+            # work-around for istanbul's missing report directory
+            - mkdir ./.nyc_output
+            - npm run check
+
+      - step:
+          name: Build Docker Image
+          image: google/cloud-sdk:latest
+          script:
+            - export IMAGE_NAME=gcr.io/$GCP_PROJECT/$APP_NAME:$BITBUCKET_BUILD_NUMBER
+            # configure gcloud sdk
+            - echo $GCP_API_KEYFILE | base64 --decode --ignore-garbage > ./gcloud-api-key.json
+            - gcloud auth activate-service-account --key-file gcloud-api-key.json
+            - gcloud config set project $GCP_PROJECT
+            # configure docker
+            - gcloud auth configure-docker --quiet
+            # build and push the image
+            - docker build -t $IMAGE_NAME .
+            - docker push $IMAGE_NAME
+          services:
+            - docker
+          caches:
+            - docker
+
+      - step:
+          name: Deploy to Test
+          image: google/cloud-sdk:latest
+          deployment: test
+          trigger: manual
+          script:
+            - export IMAGE_NAME=gcr.io/$GCP_PROJECT/$APP_NAME:$BITBUCKET_BUILD_NUMBER
+            # configure gcloud sdk
+            - echo $GCP_API_KEYFILE | base64 --decode --ignore-garbage > ./gcloud-api-key.json
+            - gcloud auth activate-service-account --key-file gcloud-api-key.json
+            - gcloud config set project $GCP_PROJECT
+            # configure kubectl
+            - gcloud container clusters get-credentials $GCP_GKE_CLUSTER --zone=$GCP_ZONE
+            # Update the deployment to use the new Docker image
+            - kubectl apply -f k8s-deploy.yml
+            - kubectl set image deployment/$APP_NAME $APP_NAME=$IMAGE_NAME
